@@ -1,0 +1,5 @@
+{
+  "name": "PEX Dashboard",
+  "description": "Operational dashboard for pharmacy management featuring real-time monitoring, inventory tracking, and alert systems.",
+  "requestFramePermissions": []
+}

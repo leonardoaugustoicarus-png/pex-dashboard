@@ -1,0 +1,28 @@
+/* Basic styles for PEX Dashboard */
+:root {
+  --primary-dark: #180404;
+  --secondary-dark: #2c0a0a;
+  --accent-orange: #ea580c;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1a0505;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #5a1515;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #ea580c;
+}

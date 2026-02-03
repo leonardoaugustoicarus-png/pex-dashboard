@@ -1,0 +1,21 @@
+{
+  "name": "PEX Dashboard",
+  "short_name": "PEX",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#180404",
+  "theme_color": "#2c0a0a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/883/883407.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/883/883407.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
