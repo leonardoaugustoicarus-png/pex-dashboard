@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db } from './firebase';
+import { db, initializationError } from './firebase';
 import {
   collection,
   onSnapshot,
@@ -34,7 +34,7 @@ const App: React.FC = () => {
     if (!isAuthenticated) return;
 
     if (!db) {
-      setDbError("O Firebase não foi inicializado corretamente. Verifique sua conexão e as credenciais no arquivo .env.local.");
+      setDbError(initializationError || "O Firebase não foi inicializado corretamente. Verifique sua conexão e as credenciais no arquivo .env.local.");
       setIsLoading(false);
       return;
     }
@@ -55,6 +55,7 @@ const App: React.FC = () => {
         setIsLoading(false);
       }, (error) => {
         console.error("Erro no listener do inventário:", error);
+        setDbError(`Erro no Inventário: ${error.message}`);
         setIsLoading(false);
       });
 
@@ -68,6 +69,7 @@ const App: React.FC = () => {
         setSalesHistory(loadedSales);
       }, (error) => {
         console.error("Erro no listener de vendas:", error);
+        setDbError(`Erro nas Vendas: ${error.message}`);
       });
 
       return () => {

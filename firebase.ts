@@ -19,24 +19,33 @@ const firebaseConfig = {
 // Helper to check if config is valid
 const isConfigValid = !!firebaseConfig.apiKey && firebaseConfig.apiKey !== 'your_api_key_here';
 
+if (import.meta.env.DEV) {
+  console.log("Firebase Config Check:", {
+    hasApiKey: !!firebaseConfig.apiKey,
+    hasProjectId: !!firebaseConfig.projectId,
+    projectId: firebaseConfig.projectId,
+    envKeys: Object.keys(import.meta.env).filter(k => k.startsWith('VITE_FIREBASE'))
+  });
+}
+
 // Initialize Firebase
-let app: any;
-let db: any;
-let auth: any;
+let app: any = null;
+let db: any = null;
+let auth: any = null;
+let initializationError: string | null = null;
 
 try {
   if (!isConfigValid) {
     const missingVars = [];
     if (!firebaseConfig.apiKey) missingVars.push("VITE_FIREBASE_API_KEY");
-    // Add other critical ones if needed
-    throw new Error(`Configuração do Firebase incompleta ou ausente no arquivo .env.local. Verifique: ${missingVars.join(", ")}`);
+    throw new Error(`Configuração do Firebase incompleta no .env.local. Faltando: ${missingVars.join(", ")}`);
   }
   app = initializeApp(firebaseConfig);
   db = getFirestore(app);
   auth = getAuth(app);
-} catch (error) {
+} catch (error: any) {
   console.error("Firebase initialization failed:", error);
-  // Fallback objects
+  initializationError = error?.message || "Erro desconhecido na inicialização do Firebase";
   app = null;
   db = null;
   auth = null;
@@ -52,4 +61,4 @@ isSupported().then((supported) => {
   console.warn("Firebase Analytics not supported in this environment:", err);
 });
 
-export { app, analytics, db, auth };
+export { app, analytics, db, auth, initializationError };
