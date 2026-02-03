@@ -18,6 +18,7 @@ const App: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [salesHistory, setSalesHistory] = useState<SaleRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [dbError, setDbError] = useState<string | null>(null);
 
   useEffect(() => {
     // Check session storage on mount to allow refresh without re-login
@@ -30,9 +31,16 @@ const App: React.FC = () => {
 
   // Firestore Listeners
   useEffect(() => {
-    if (!isAuthenticated || !db) return;
+    if (!isAuthenticated) return;
+
+    if (!db) {
+      setDbError("O Firebase não foi inicializado corretamente. Verifique sua conexão e as credenciais no arquivo .env.local.");
+      setIsLoading(false);
+      return;
+    }
 
     setIsLoading(true);
+    setDbError(null);
     console.log("Iniciando listeners do Firestore...");
 
     try {
@@ -88,6 +96,7 @@ const App: React.FC = () => {
           products={products}
           salesHistory={salesHistory}
           isLoading={isLoading}
+          dbError={dbError}
         />
       )}
     </>

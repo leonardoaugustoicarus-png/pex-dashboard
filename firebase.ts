@@ -8,6 +8,7 @@ import { getAuth } from "firebase/auth";
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
@@ -25,13 +26,16 @@ let auth: any;
 
 try {
   if (!isConfigValid) {
-    throw new Error("Configuração do Firebase ausente no arquivo .env");
+    const missingVars = [];
+    if (!firebaseConfig.apiKey) missingVars.push("VITE_FIREBASE_API_KEY");
+    // Add other critical ones if needed
+    throw new Error(`Configuração do Firebase incompleta ou ausente no arquivo .env.local. Verifique: ${missingVars.join(", ")}`);
   }
   app = initializeApp(firebaseConfig);
   db = getFirestore(app);
   auth = getAuth(app);
 } catch (error) {
-  console.warn("Firebase not initialized:", error);
+  console.error("Firebase initialization failed:", error);
   // Fallback objects
   app = null;
   db = null;

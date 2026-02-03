@@ -32,9 +32,10 @@ interface DashboardProps {
   products: Product[];
   salesHistory: SaleRecord[];
   isLoading: boolean;
+  dbError: string | null;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading }) => {
+const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading, dbError }) => {
   const [isMigrating, setIsMigrating] = useState(false);
 
   // Toast State
@@ -666,7 +667,7 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
               </h2>
             </div>
             <p className="text-orange-400/60 text-[10px] tracking-[0.4em] font-bold uppercase pl-1 border-l-4 border-orange-600 ml-1">
-              CONECTADO AO FIREBASE
+              {!dbError ? 'CONECTADO AO FIREBASE' : 'FALHA NA CONEXÃO'}
             </p>
           </div>
           <div className="flex gap-2">
@@ -752,7 +753,28 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
               onClearSales={handleClearSales}
             />
           </div>
-          {isLoading ? (
+
+          {dbError && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-6 flex flex-col items-center gap-4 text-center animate-in fade-in zoom-in duration-500 my-8">
+              <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
+                <AlertCircle className="text-red-500" size={28} />
+              </div>
+              <div>
+                <h3 className="text-red-400 font-bold uppercase tracking-widest text-sm mb-2">Erro de Sincronização</h3>
+                <p className="text-red-200/70 text-xs max-w-md mx-auto leading-relaxed">
+                  {dbError}
+                </p>
+              </div>
+              <button
+                onClick={() => window.location.reload()}
+                className="mt-2 px-6 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 rounded-xl text-red-200 text-[10px] font-bold tracking-widest uppercase transition-all"
+              >
+                Tentar Novamente
+              </button>
+            </div>
+          )}
+
+          {!dbError && isLoading ? (
             <div className="flex flex-col justify-center items-center py-24 bg-[#150505]/40 rounded-2xl border border-white/5 animate-pulse">
               <LoaderCircle size={40} className="text-orange-500 animate-spin mb-4" />
               <span className="text-orange-200 text-sm font-bold tracking-widest uppercase">Sincronizando Banco de Dados...</span>
@@ -787,8 +809,8 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
           </div>
         </div>
         <div className="flex items-center gap-2 text-green-500 bg-green-500/5 px-2 py-0.5 rounded-full border border-green-500/10">
-          <div className={`w-1.5 h-1.5 bg-green-500 rounded-full ${!isLoading ? 'animate-pulse' : ''} shadow-[0_0_8px_rgba(34,197,94,0.6)]`}></div>
-          {isLoading ? 'CONECTANDO...' : 'ONLINE (FIREBASE)'}
+          <div className={`w-1.5 h-1.5 ${dbError ? 'bg-red-500' : 'bg-green-500'} rounded-full ${!isLoading && !dbError ? 'animate-pulse' : ''} shadow-[0_0_8px_rgba(34,197,94,0.6)]`}></div>
+          {dbError ? 'ERRO (FIREBASE)' : (isLoading ? 'CONECTANDO...' : 'ONLINE (FIREBASE)')}
         </div>
       </footer>
     </div>
