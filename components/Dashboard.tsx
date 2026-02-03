@@ -24,6 +24,7 @@ import NewProductModal from './NewProductModal';
 import ShareModal from './ShareModal';
 import SaleModal from './SaleModal';
 import DeleteModal from './DeleteModal';
+import PDFPreviewModal from './PDFPreviewModal';
 import Toast, { ToastMessage, ToastType } from './Toast';
 import { Product, SaleRecord } from '../types';
 
@@ -62,6 +63,11 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [bulkIdsToDelete, setBulkIdsToDelete] = useState<string[]>([]);
+
+  // PDF Preview State
+  const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string | null>(null);
+  const [isPDFModalOpen, setIsPDFModalOpen] = useState(false);
+  const [currentPDFTitle, setCurrentPDFTitle] = useState('');
 
   // Selection State
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -588,7 +594,9 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
     });
 
     const pdfBlobUrl = doc.output('bloburl');
-    window.open(pdfBlobUrl, '_blank');
+    setPdfPreviewUrl(pdfBlobUrl.toString());
+    setCurrentPDFTitle(title);
+    setIsPDFModalOpen(true);
   };
 
   return (
@@ -603,6 +611,13 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
           ))}
         </div>
       </div>
+
+      <PDFPreviewModal
+        isOpen={isPDFModalOpen}
+        onClose={() => setIsPDFModalOpen(false)}
+        pdfUrl={pdfPreviewUrl}
+        title={currentPDFTitle}
+      />
 
       <input
         type="file"

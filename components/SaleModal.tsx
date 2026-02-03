@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, ShoppingCart, CheckCheck, Box, Hash } from 'lucide-react';
-import { Product } from './ProductTable';
+import { Product } from '../types';
 
 interface SaleModalProps {
   isOpen: boolean;
@@ -28,7 +28,7 @@ const SaleModal: React.FC<SaleModalProps> = ({ isOpen, onClose, onConfirm, produ
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!matricula || !quantity || !batch) return;
-    
+
     onConfirm(matricula, Number(quantity), batch);
   };
 
@@ -40,51 +40,51 @@ const SaleModal: React.FC<SaleModalProps> = ({ isOpen, onClose, onConfirm, produ
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
       <div className="bg-[#0f2015] border border-green-900/50 rounded-2xl shadow-[0_0_40px_rgba(22,163,74,0.2)] w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
-        
+
         <div className="p-6">
           <div className="text-center mb-6">
             <div className="w-14 h-14 bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-3 border border-green-500/30">
-                <ShoppingCart size={24} className="text-green-500" />
+              <ShoppingCart size={24} className="text-green-500" />
             </div>
             <h3 className="text-xl font-bold text-white mb-1">Confirmar Venda</h3>
             <p className="text-green-400/80 text-xs uppercase tracking-wider font-bold truncate px-4">{product.name}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            
+
             {/* Row: Quantity & Batch */}
             <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className={labelClass}><Box size={10} className="inline mr-1"/> Quantidade</label>
-                    <input 
-                        required
-                        type="number"
-                        min="1"
-                        max={maxQuantity}
-                        value={quantity}
-                        onChange={(e) => setQuantity(e.target.value)}
-                        className={`${inputBaseClass} text-center text-lg font-bold`}
-                    />
-                    <div className="text-[9px] text-green-500/60 text-center mt-1 font-mono">
-                        DISPONÍVEL: {maxQuantity}
-                    </div>
+              <div>
+                <label className={labelClass}><Box size={10} className="inline mr-1" /> Quantidade</label>
+                <input
+                  required
+                  type="number"
+                  min="1"
+                  max={maxQuantity}
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                  className={`${inputBaseClass} text-center text-lg font-bold`}
+                />
+                <div className="text-[9px] text-green-500/60 text-center mt-1 font-mono">
+                  DISPONÍVEL: {maxQuantity}
                 </div>
-                <div>
-                    <label className={labelClass}><Hash size={10} className="inline mr-1"/> Lote</label>
-                    <input 
-                        required
-                        type="text"
-                        value={batch}
-                        onChange={(e) => setBatch(e.target.value.toUpperCase())}
-                        className={`${inputBaseClass} text-center uppercase`}
-                    />
-                </div>
+              </div>
+              <div>
+                <label className={labelClass}><Hash size={10} className="inline mr-1" /> Lote</label>
+                <input
+                  required
+                  type="text"
+                  value={batch}
+                  onChange={(e) => setBatch(e.target.value.toUpperCase())}
+                  className={`${inputBaseClass} text-center uppercase`}
+                />
+              </div>
             </div>
 
             {/* Seller ID */}
             <div>
               <label className={labelClass}>Matrícula do Vendedor</label>
-              <input 
+              <input
                 autoFocus
                 required
                 type="text"
@@ -97,14 +97,14 @@ const SaleModal: React.FC<SaleModalProps> = ({ isOpen, onClose, onConfirm, produ
 
             {/* Actions */}
             <div className="flex gap-3 mt-6 pt-2">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={onClose}
                 className="flex-1 py-3 rounded-lg bg-[#1a2e22] text-gray-300 font-bold border border-transparent hover:bg-[#233a2b] transition text-sm"
               >
                 CANCELAR
               </button>
-              <button 
+              <button
                 type="submit"
                 className="flex-1 py-3 rounded-lg bg-green-600 hover:bg-green-500 text-white font-bold shadow-lg shadow-green-900/40 flex items-center justify-center gap-2 transition transform active:scale-95 text-sm"
               >
