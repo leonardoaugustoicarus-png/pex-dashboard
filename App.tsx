@@ -1,26 +1,19 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { db } from './firebase';
-import { 
-  collection, 
-  onSnapshot, 
-  query, 
-  orderBy 
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy
 } from 'firebase/firestore';
 import Dashboard from './components/Dashboard';
 import LoginModal from './components/LoginModal';
-import { Product } from './components/ProductTable';
-
-// Interface for Sales History (replicated from Dashboard for type safety here)
-export interface SaleRecord extends Product {
-  quantitySold: number;
-  sellerId: string;
-  saleDate: string; // ISO String
-}
+import { Product, SaleRecord } from './types';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
-  
+
   // Firebase Data States
   const [products, setProducts] = useState<Product[]>([]);
   const [salesHistory, setSalesHistory] = useState<SaleRecord[]>([]);
@@ -86,10 +79,10 @@ const App: React.FC = () => {
       {!isAuthenticated ? (
         <LoginModal onLoginSuccess={handleLoginSuccess} />
       ) : (
-        <Dashboard 
-          products={products} 
-          salesHistory={salesHistory} 
-          isLoading={isLoading} 
+        <Dashboard
+          products={products}
+          salesHistory={salesHistory}
+          isLoading={isLoading}
         />
       )}
     </>

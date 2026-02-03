@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 import { initializeApp } from "firebase/app";
-import { getAnalytics, isSupported } from "firebase/analytics";
+import { getAnalytics, isSupported, Analytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -23,7 +23,7 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 // Initialize Analytics conditionally
-let analytics: any = null;
+let analytics: Analytics | null = null;
 isSupported().then((supported) => {
   if (supported) {
     analytics = getAnalytics(app);

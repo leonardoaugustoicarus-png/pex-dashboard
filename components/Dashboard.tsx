@@ -19,13 +19,13 @@ import {
 import Header from './Header';
 import StatCard from './StatCard';
 import Filters from './Filters';
-import ProductTable, { Product } from './ProductTable';
+import ProductTable from './ProductTable';
 import NewProductModal from './NewProductModal';
 import ShareModal from './ShareModal';
 import SaleModal from './SaleModal';
 import DeleteModal from './DeleteModal';
 import Toast, { ToastMessage, ToastType } from './Toast';
-import { SaleRecord } from '../App';
+import { Product, SaleRecord } from '../types';
 
 interface DashboardProps {
   products: Product[];

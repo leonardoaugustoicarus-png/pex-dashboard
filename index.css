@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Basic styles for PEX Dashboard */
 :root {
   --primary-dark: #180404;
