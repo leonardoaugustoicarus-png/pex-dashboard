@@ -15,12 +15,28 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Helper to check if config is valid
+const isConfigValid = !!firebaseConfig.apiKey && firebaseConfig.apiKey !== 'your_api_key_here';
 
-// Initialize Cloud Firestore and Authentication
-const db = getFirestore(app);
-const auth = getAuth(app);
+// Initialize Firebase
+let app: any;
+let db: any;
+let auth: any;
+
+try {
+  if (!isConfigValid) {
+    throw new Error("Configuração do Firebase ausente no arquivo .env");
+  }
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  auth = getAuth(app);
+} catch (error) {
+  console.warn("Firebase not initialized:", error);
+  // Fallback objects
+  app = null;
+  db = null;
+  auth = null;
+}
 
 // Initialize Analytics conditionally
 let analytics: Analytics | null = null;

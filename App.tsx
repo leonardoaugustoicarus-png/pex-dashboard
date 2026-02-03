@@ -30,41 +30,46 @@ const App: React.FC = () => {
 
   // Firestore Listeners
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !db) return;
 
     setIsLoading(true);
     console.log("Iniciando listeners do Firestore...");
 
-    // 1. Inventory Listener
-    const inventoryQuery = query(collection(db, "inventory"));
-    const unsubscribeInventory = onSnapshot(inventoryQuery, (snapshot) => {
-      const loadedProducts = snapshot.docs.map(doc => ({
-        ...doc.data(),
-        id: doc.id
-      })) as Product[];
-      setProducts(loadedProducts);
-      setIsLoading(false);
-    }, (error) => {
-      console.error("Erro no listener do inventário:", error);
-      setIsLoading(false);
-    });
+    try {
+      // 1. Inventory Listener
+      const inventoryQuery = query(collection(db, "inventory"));
+      const unsubscribeInventory = onSnapshot(inventoryQuery, (snapshot) => {
+        const loadedProducts = snapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        })) as Product[];
+        setProducts(loadedProducts);
+        setIsLoading(false);
+      }, (error) => {
+        console.error("Erro no listener do inventário:", error);
+        setIsLoading(false);
+      });
 
-    // 2. Sales Listener
-    const salesQuery = query(collection(db, "sales"), orderBy("saleDate", "desc"));
-    const unsubscribeSales = onSnapshot(salesQuery, (snapshot) => {
-      const loadedSales = snapshot.docs.map(doc => ({
-        ...doc.data(),
-        id: doc.id
-      })) as SaleRecord[];
-      setSalesHistory(loadedSales);
-    }, (error) => {
-      console.error("Erro no listener de vendas:", error);
-    });
+      // 2. Sales Listener
+      const salesQuery = query(collection(db, "sales"), orderBy("saleDate", "desc"));
+      const unsubscribeSales = onSnapshot(salesQuery, (snapshot) => {
+        const loadedSales = snapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        })) as SaleRecord[];
+        setSalesHistory(loadedSales);
+      }, (error) => {
+        console.error("Erro no listener de vendas:", error);
+      });
 
-    return () => {
-      unsubscribeInventory();
-      unsubscribeSales();
-    };
+      return () => {
+        unsubscribeInventory();
+        unsubscribeSales();
+      };
+    } catch (e) {
+      console.error("Falha ao configurar listeners:", e);
+      setIsLoading(false);
+    }
   }, [isAuthenticated]);
 
   const handleLoginSuccess = () => {

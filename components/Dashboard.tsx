@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   Download, Upload, Box, AlertCircle,
-  Clock, CheckCircle, Monitor, Database, Loader2
+  Clock, CheckCircle, Monitor, Database, LoaderCircle
 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -754,7 +754,7 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
           </div>
           {isLoading ? (
             <div className="flex flex-col justify-center items-center py-24 bg-[#150505]/40 rounded-2xl border border-white/5 animate-pulse">
-              <Loader2 size={40} className="text-orange-500 animate-spin mb-4" />
+              <LoaderCircle size={40} className="text-orange-500 animate-spin mb-4" />
               <span className="text-orange-200 text-sm font-bold tracking-widest uppercase">Sincronizando Banco de Dados...</span>
               <span className="text-orange-500/40 text-[10px] font-mono mt-1">Lendo coleção 'inventory' e 'sales'</span>
             </div>

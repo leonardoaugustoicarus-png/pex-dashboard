@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { CheckCircle, AlertCircle, Info, X, AlertTriangle, Loader2 } from 'lucide-react';
+import { CheckCircle, AlertCircle, Info, X, AlertTriangle, LoaderCircle } from 'lucide-react';
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning';
 
@@ -50,7 +50,7 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
       progress: 'bg-amber-500'
     },
     info: {
-      icon: Info, // Or Loader2 if you want to imply processing
+      icon: Info, // Or LoaderCircle if you want to imply processing
       wrapper: 'bg-gradient-to-r from-blue-900/90 to-slate-900/90 border-blue-500/30 shadow-[0_4px_20px_rgba(59,130,246,0.15)]',
       iconBg: 'bg-blue-500/20 text-blue-400 ring-1 ring-blue-500/40',
       title: 'text-blue-100',
@@ -64,7 +64,7 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
 
   return (
     <div className={`relative flex items-center gap-4 p-4 rounded-2xl border backdrop-blur-xl w-full md:min-w-[360px] max-w-sm animate-in slide-in-from-right-full fade-in duration-300 mb-3 group overflow-hidden ${style.wrapper}`}>
-      
+
       {/* Icon Container */}
       <div className={`p-2.5 rounded-xl flex-shrink-0 ${style.iconBg} shadow-inner`}>
         <Icon size={20} className={toast.type === 'info' && toast.title.includes('Gerando') ? 'animate-spin' : ''} />
@@ -81,13 +81,13 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
       </div>
 
       {/* Close Button */}
-      <button 
+      <button
         onClick={() => onClose(toast.id)}
         className="p-1.5 rounded-lg text-white/20 hover:text-white hover:bg-white/10 transition-colors flex-shrink-0"
       >
         <X size={16} />
       </button>
-      
+
       {/* Progress Bar */}
       <div className="absolute bottom-0 left-0 w-full h-[3px] bg-black/20">
         <div className={`h-full ${style.progress} shadow-[0_0_10px_currentColor] w-full animate-[shrink_4s_linear_forwards] origin-left rounded-r-full`}></div>
