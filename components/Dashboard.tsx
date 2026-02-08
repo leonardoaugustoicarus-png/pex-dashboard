@@ -63,9 +63,9 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
   // NEW: Delete Modal State
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
-  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+
   const [bulkIdsToDelete, setBulkIdsToDelete] = useState<string[]>([]);
-  
+
   // Sorting State
   const [sortOrder, setSortOrder] = useState<'default' | 'asc' | 'desc'>('default');
 
