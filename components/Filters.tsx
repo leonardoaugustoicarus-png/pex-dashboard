@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Search, Filter, FileText, List, ShoppingCart, Trash2,
   ChevronDown, ChevronUp, Tag, User, Calendar, LayoutGrid, ArrowRightLeft,
-  Box, AlertTriangle, Clock, CheckCircle, Eraser, AlertCircle, Check, Eye,
+  Box, AlertTriangle, Clock, CheckCircle, Eraser, AlertCircle, Check,
   ArrowDownAZ, ArrowUpAZ, ArrowUpDown
 } from 'lucide-react';
 
@@ -187,7 +187,7 @@ const Filters: React.FC<FiltersProps> = ({
             className="group relative flex items-center gap-2 px-5 h-[42px] rounded-lg text-xs font-bold uppercase tracking-wider bg-gradient-to-br from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-[#2c0a0a] shadow-[0_0_15px_rgba(245,158,11,0.3)] hover:shadow-[0_0_20px_rgba(245,158,11,0.5)] transition-all hover:-translate-y-0.5 active:scale-95 border border-white/20 overflow-hidden whitespace-nowrap"
           >
             <div className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 group-hover:animate-[shimmer_1s_infinite]"></div>
-            <Box size={16} className="stroke-[2.5]" /> NOVO PRODUTO (INVENTÁRIO)
+            <Box size={16} className="stroke-[2.5]" /> NOVO PRODUTO
           </button>
 
           <div className="w-px h-8 bg-white/10 mx-1"></div>
