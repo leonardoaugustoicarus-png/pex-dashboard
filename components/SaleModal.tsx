@@ -27,7 +27,7 @@ const SaleModal: React.FC<SaleModalProps> = ({ isOpen, onClose, onConfirm, produ
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!matricula || !quantity || !batch) return;
+    if (!matricula || !quantity) return;
 
     onConfirm(matricula, Number(quantity), batch);
   };
@@ -72,7 +72,6 @@ const SaleModal: React.FC<SaleModalProps> = ({ isOpen, onClose, onConfirm, produ
               <div>
                 <label className={labelClass}><Hash size={10} className="inline mr-1" /> Lote</label>
                 <input
-                  required
                   type="text"
                   value={batch}
                   onChange={(e) => setBatch(e.target.value.toUpperCase())}

@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Search, Filter, FileText, List, ShoppingCart, Trash2, 
+import {
+  Search, Filter, FileText, List, ShoppingCart, Trash2,
   ChevronDown, ChevronUp, Tag, User, Calendar, LayoutGrid, ArrowRightLeft,
-  Box, AlertTriangle, Clock, CheckCircle, Eraser, AlertCircle, Check, Eye
+  Box, AlertTriangle, Clock, CheckCircle, Eraser, AlertCircle, Check, Eye,
+  ArrowDownAZ, ArrowUpAZ, ArrowUpDown
 } from 'lucide-react';
 
 interface FiltersProps {
   searchTerm: string;
   onSearchChange: (val: string) => void;
-  
+
   // Advanced filters
   startDate: string;
   onStartDateChange: (val: string) => void;
@@ -20,7 +21,7 @@ interface FiltersProps {
   onVendorChange: (val: string) => void;
   section: string;
   onSectionChange: (val: string) => void;
-  
+
   // New prop for Transfer logic
   transfer?: string;
   onTransferChange?: (val: string) => void;
@@ -32,27 +33,32 @@ interface FiltersProps {
   onGenerateSales: () => void;
   onClearFilters: () => void;
   onClearSales: () => void;
+  // Sorting props
+  sortOrder: 'default' | 'asc' | 'desc';
+  onSortChange: (val: 'default' | 'asc' | 'desc') => void;
 }
 
-const Filters: React.FC<FiltersProps> = ({ 
+const Filters: React.FC<FiltersProps> = ({
   searchTerm, onSearchChange,
   startDate, onStartDateChange,
   endDate, onEndDateChange,
   statusFilter, onStatusFilterChange,
   vendor, onVendorChange,
   section, onSectionChange,
-  transfer = '', 
+  transfer = '',
   onTransferChange,
   onNewProduct,
   onGenerateCatalog,
   onGenerateInventory,
   onGenerateSales,
   onClearFilters,
-  onClearSales
+  onClearSales,
+  sortOrder,
+  onSortChange
 }) => {
-  const [isExpanded, setIsExpanded] = useState(true); 
+  const [isExpanded, setIsExpanded] = useState(true);
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
-  
+
   // State to manage overflow visibility for dropdowns
   const [overflowVisible, setOverflowVisible] = useState(true);
 
@@ -69,7 +75,7 @@ const Filters: React.FC<FiltersProps> = ({
       if (statusDropdownRef.current && !statusDropdownRef.current.contains(event.target as Node)) {
         setIsStatusDropdownOpen(false);
       }
-      
+
       // Clear Sales Dropdown Logic
       if (clearSalesRef.current && !clearSalesRef.current.contains(event.target as Node)) {
         setIsClearSalesOpen(false);
@@ -110,123 +116,144 @@ const Filters: React.FC<FiltersProps> = ({
 
   const currentStatusOption = statusOptions.find(opt => opt.value === statusFilter) || statusOptions[0];
 
+  const handleSortToggle = () => {
+    if (sortOrder === 'default') onSortChange('asc');
+    else if (sortOrder === 'asc') onSortChange('desc');
+    else onSortChange('default');
+  };
+
   return (
     <div className="flex flex-col gap-5 mb-8">
       {/* Top Row: Search, Toggle, Actions */}
       <div className="bg-[#2c0a0a]/60 backdrop-blur-md p-4 rounded-2xl border border-white/10 flex flex-col lg:flex-row items-center justify-between gap-5 shadow-2xl relative z-30">
-        
-        <div className="flex w-full lg:w-auto gap-3 items-center flex-1">
-            {/* Search Bar */}
-            <div className="relative flex-1 min-w-[200px] group">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 group-focus-within:text-orange-500 transition-colors" size={18}/>
-            <input 
-                type="text" 
-                value={searchTerm}
-                onChange={(e) => onSearchChange(e.target.value)}
-                placeholder="Pesquisar por nome, lote ou código de barras..." 
-                className="w-full bg-[#150505] border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/10 text-gray-200 placeholder-gray-600 transition-all shadow-inner font-medium h-[42px]"
-            />
-            </div>
 
-            {/* Toggle Advanced Filters Button */}
-            <button 
+        <div className="flex w-full lg:w-auto gap-3 items-center flex-1">
+          {/* Search Bar */}
+          <div className="relative flex-1 min-w-[200px] group">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 group-focus-within:text-orange-500 transition-colors" size={18} />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => onSearchChange(e.target.value)}
+              placeholder="Pesquisar por nome, lote ou código de barras..."
+              className="w-full bg-[#150505] border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/10 text-gray-200 placeholder-gray-600 transition-all shadow-inner font-medium h-[42px]"
+            />
+          </div>
+
+          {/* Sort Button */}
+          <button
+            onClick={handleSortToggle}
+            className={`
+                hidden sm:flex items-center gap-2 px-4 h-[42px] rounded-xl text-xs font-bold tracking-wider uppercase transition-all duration-300 border border-white/5
+                ${sortOrder !== 'default'
+                ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.3)]'
+                : 'bg-[#2c0a0a] hover:bg-[#3d0e0e] text-gray-400 hover:text-white'}
+              `}
+            title="Ordenar por Nome"
+          >
+            {sortOrder === 'asc' ? <ArrowDownAZ size={16} /> : sortOrder === 'desc' ? <ArrowUpAZ size={16} /> : <ArrowUpDown size={16} />}
+            <span className="hidden md:inline">{sortOrder === 'asc' ? 'A-Z' : sortOrder === 'desc' ? 'Z-A' : 'ORDENAR'}</span>
+          </button>
+
+          {/* Toggle Advanced Filters Button */}
+          <button
             onClick={() => setIsExpanded(!isExpanded)}
             className={`
                 hidden sm:flex items-center gap-2 px-6 h-[42px] rounded-xl text-xs font-bold tracking-wider uppercase transition-all duration-300 border border-white/5
-                ${isExpanded 
-                ? 'bg-orange-500 text-white shadow-[0_0_15px_rgba(249,115,22,0.3)]' 
+                ${isExpanded
+                ? 'bg-orange-500 text-white shadow-[0_0_15px_rgba(249,115,22,0.3)]'
                 : 'bg-[#2c0a0a] hover:bg-[#3d0e0e] text-gray-400 hover:text-white'}
             `}
-            >
-            <Filter size={16}/> 
+          >
+            <Filter size={16} />
             <span>Filtros</span>
             {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-            </button>
-             {/* Mobile Toggle Icon Only */}
-             <button 
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="sm:hidden p-3.5 bg-orange-600 rounded-xl text-white h-[42px] w-[42px] flex items-center justify-center"
-             >
-                 <Filter size={20}/> 
-             </button>
+          </button>
+          {/* Mobile Toggle Icon Only */}
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="sm:hidden p-3.5 bg-orange-600 rounded-xl text-white h-[42px] w-[42px] flex items-center justify-center"
+          >
+            <Filter size={20} />
+          </button>
         </div>
 
         {/* Action Buttons Group */}
         <div className="flex items-center gap-3 w-full lg:w-auto justify-end overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 hide-scrollbar">
-          
+
           {/* New Product Button - Integrated here */}
-          <button 
+          <button
             onClick={onNewProduct}
             className="group relative flex items-center gap-2 px-5 h-[42px] rounded-lg text-xs font-bold uppercase tracking-wider bg-gradient-to-br from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-[#2c0a0a] shadow-[0_0_15px_rgba(245,158,11,0.3)] hover:shadow-[0_0_20px_rgba(245,158,11,0.5)] transition-all hover:-translate-y-0.5 active:scale-95 border border-white/20 overflow-hidden whitespace-nowrap"
           >
-             <div className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 group-hover:animate-[shimmer_1s_infinite]"></div>
-             <Box size={16} className="stroke-[2.5]"/> NOVO PRODUTO (INVENTÁRIO)
+            <div className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 group-hover:animate-[shimmer_1s_infinite]"></div>
+            <Box size={16} className="stroke-[2.5]" /> NOVO PRODUTO (INVENTÁRIO)
           </button>
 
           <div className="w-px h-8 bg-white/10 mx-1"></div>
-          
-          <button 
+
+          <button
             onClick={onGenerateCatalog}
             className={`${button3DClass} min-w-[120px] bg-[#1e1b4b] hover:bg-[#2e2a5b] text-blue-200 border-blue-900/50 hover:border-blue-700/50 shadow-[0_0_15px_rgba(30,58,138,0.2)]`}
             title="Gerar PDF do Catálogo de Referência"
           >
-            <FileText size={16}/> CATÁLOGO
+            <FileText size={16} /> CATÁLOGO
           </button>
 
-          <button 
+          <button
             onClick={onGenerateInventory}
             className={`${button3DClass} min-w-[120px] bg-[#2c0a0a] hover:bg-[#3d0e0e] text-gray-200 border-white/10 hover:border-white/20`}
             title="Gerar PDF da Lista Atual"
           >
-            <List size={16}/> INVENTÁRIO
+            <List size={16} /> INVENTÁRIO
           </button>
 
           {/* Vendas Group */}
           <div className="relative flex items-center rounded-xl shadow-lg shadow-green-900/20" ref={clearSalesRef}>
-            <button 
-                onClick={onGenerateSales}
-                className={`flex items-center gap-2 px-6 py-3 rounded-l-lg text-xs font-bold uppercase tracking-wider bg-green-700 hover:bg-green-600 text-white border-b-4 border-green-900 active:border-b-0 active:translate-y-1 transition-all z-10 whitespace-nowrap`}
+            <button
+              onClick={onGenerateSales}
+              className={`flex items-center gap-2 px-6 py-3 rounded-l-lg text-xs font-bold uppercase tracking-wider bg-green-700 hover:bg-green-600 text-white border-b-4 border-green-900 active:border-b-0 active:translate-y-1 transition-all z-10 whitespace-nowrap`}
             >
-                <ShoppingCart size={16}/> VENDAS
+              <ShoppingCart size={16} /> VENDAS
             </button>
-            
-            <button 
-                onClick={() => setIsClearSalesOpen(!isClearSalesOpen)}
-                className={`px-4 py-3 bg-red-700 hover:bg-red-600 text-white rounded-r-lg border-b-4 border-red-900 active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center group ${isClearSalesOpen ? 'bg-red-600 border-t-0 border-x-0 translate-y-1 border-b-0' : ''}`}
-                title="Limpar Relatório"
+
+            <button
+              onClick={() => setIsClearSalesOpen(!isClearSalesOpen)}
+              className={`px-4 py-3 bg-red-700 hover:bg-red-600 text-white rounded-r-lg border-b-4 border-red-900 active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center group ${isClearSalesOpen ? 'bg-red-600 border-t-0 border-x-0 translate-y-1 border-b-0' : ''}`}
+              title="Limpar Relatório"
             >
-                <Trash2 size={18} className="group-hover:scale-110 transition-transform"/>
+              <Trash2 size={18} className="group-hover:scale-110 transition-transform" />
             </button>
 
             {/* Confirmation Dropdown */}
             {isClearSalesOpen && (
               <div className="absolute right-0 top-full mt-3 w-80 bg-[#1a0505] border border-red-500/20 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                 <div className="bg-red-900/20 p-4 border-b border-red-500/10 flex items-center gap-3">
-                    <div className="p-2 bg-red-500/10 rounded-full">
-                      <AlertCircle size={20} className="text-red-500" />
-                    </div>
-                    <span className="text-xs font-bold text-red-200 uppercase tracking-widest">Confirmação</span>
-                 </div>
-                 <div className="p-5">
-                    <h4 className="text-white font-bold text-sm mb-2">Limpar Relatório de Vendas?</h4>
-                    <p className="text-xs text-gray-400 mb-5 leading-relaxed">
-                       Essa ação removerá <strong>todos</strong> os itens da lista de vendas atual. Isso não pode ser desfeito.
-                    </p>
-                    <div className="flex gap-3">
-                       <button 
-                          onClick={() => setIsClearSalesOpen(false)}
-                          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg border border-white/10 bg-white/5 text-gray-300 text-xs font-bold hover:bg-white/10 hover:text-white transition"
-                       >
-                          CANCELAR
-                       </button>
-                       <button 
-                          onClick={() => { onClearSales(); setIsClearSalesOpen(false); }}
-                          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-900/40 transition"
-                       >
-                          CONFIRMAR
-                       </button>
-                    </div>
-                 </div>
+                <div className="bg-red-900/20 p-4 border-b border-red-500/10 flex items-center gap-3">
+                  <div className="p-2 bg-red-500/10 rounded-full">
+                    <AlertCircle size={20} className="text-red-500" />
+                  </div>
+                  <span className="text-xs font-bold text-red-200 uppercase tracking-widest">Confirmação</span>
+                </div>
+                <div className="p-5">
+                  <h4 className="text-white font-bold text-sm mb-2">Limpar Relatório de Vendas?</h4>
+                  <p className="text-xs text-gray-400 mb-5 leading-relaxed">
+                    Essa ação removerá <strong>todos</strong> os itens da lista de vendas atual. Isso não pode ser desfeito.
+                  </p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setIsClearSalesOpen(false)}
+                      className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg border border-white/10 bg-white/5 text-gray-300 text-xs font-bold hover:bg-white/10 hover:text-white transition"
+                    >
+                      CANCELAR
+                    </button>
+                    <button
+                      onClick={() => { onClearSales(); setIsClearSalesOpen(false); }}
+                      className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-900/40 transition"
+                    >
+                      CONFIRMAR
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -237,16 +264,16 @@ const Filters: React.FC<FiltersProps> = ({
       {/* Expandable Advanced Filters Panel */}
       <div className={`transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${isExpanded ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'} ${overflowVisible ? 'overflow-visible' : 'overflow-hidden'}`}>
         <div className="bg-[#1f0505]/80 backdrop-blur-sm border border-white/5 rounded-3xl p-6 shadow-inner relative z-20">
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Column 1: Status & Category */}
             <div className={groupBaseClass} ref={statusDropdownRef}>
               <label className={labelBaseClass}>
                 <Tag size={14} className="text-orange-500" /> Status e Categoria
               </label>
-              
+
               <div className="relative">
-                <button 
+                <button
                   onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
                   className={`w-full bg-[#0a0202] border rounded-xl px-4 text-sm font-semibold flex items-center justify-between transition-all shadow-sm h-[46px]
                     ${isStatusDropdownOpen ? 'border-orange-500/50 ring-2 ring-orange-500/10 text-white' : 'border-white/10 text-gray-300 hover:border-white/20 hover:text-white'}
@@ -290,32 +317,32 @@ const Filters: React.FC<FiltersProps> = ({
               <div className="space-y-3">
                 <div className="relative">
                   <User size={14} className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-500" />
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={vendor}
                     onChange={(e) => onVendorChange(e.target.value)}
-                    placeholder="Vendedor (Matrícula)" 
+                    placeholder="Vendedor (Matrícula)"
                     className={`${inputBaseClass} pl-10`}
                   />
                 </div>
                 <div className="flex gap-3">
                   <div className="relative flex-1">
                     <LayoutGrid size={14} className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-500" />
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={section}
                       onChange={(e) => onSectionChange(e.target.value)}
-                      placeholder="SEÇÃO" 
+                      placeholder="SEÇÃO"
                       className={`${inputBaseClass} pl-10 uppercase placeholder:normal-case`}
                     />
                   </div>
                   <div className="relative flex-1">
                     <ArrowRightLeft size={14} className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-500" />
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={transfer}
                       onChange={(e) => onTransferChange && onTransferChange(e.target.value)}
-                      placeholder="TRANSFER." 
+                      placeholder="TRANSFER."
                       className={`${inputBaseClass} pl-10 uppercase placeholder:normal-case`}
                     />
                   </div>
@@ -330,8 +357,8 @@ const Filters: React.FC<FiltersProps> = ({
               </label>
               <div className="flex items-center gap-3 mt-1">
                 <div className="relative flex-1 group">
-                  <input 
-                    type="date" 
+                  <input
+                    type="date"
                     value={startDate}
                     onChange={(e) => onStartDateChange(e.target.value)}
                     className={`${inputBaseClass} [color-scheme:dark] text-xs`}
@@ -339,8 +366,8 @@ const Filters: React.FC<FiltersProps> = ({
                 </div>
                 <span className="text-gray-600 font-bold">ATÉ</span>
                 <div className="relative flex-1 group">
-                  <input 
-                    type="date" 
+                  <input
+                    type="date"
                     value={endDate}
                     onChange={(e) => onEndDateChange(e.target.value)}
                     className={`${inputBaseClass} [color-scheme:dark] text-xs`}
@@ -352,13 +379,13 @@ const Filters: React.FC<FiltersProps> = ({
 
           {/* Reset Button Section - Compact Icon */}
           <div className="absolute top-6 right-6">
-             <button 
-                onClick={onClearFilters}
-                className="p-3 bg-[#150505] hover:bg-red-500/10 text-gray-400 hover:text-red-400 rounded-xl transition-all border border-white/5 hover:border-red-500/30 group shadow-lg"
-                title="Limpar Todos os Filtros"
-             >
-                <Eraser size={18} className="group-hover:rotate-12 transition-transform" />
-             </button>
+            <button
+              onClick={onClearFilters}
+              className="p-3 bg-[#150505] hover:bg-red-500/10 text-gray-400 hover:text-red-400 rounded-xl transition-all border border-white/5 hover:border-red-500/30 group shadow-lg"
+              title="Limpar Todos os Filtros"
+            >
+              <Eraser size={18} className="group-hover:rotate-12 transition-transform" />
+            </button>
           </div>
 
         </div>

@@ -63,7 +63,11 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
   // NEW: Delete Modal State
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [bulkIdsToDelete, setBulkIdsToDelete] = useState<string[]>([]);
+  
+  // Sorting State
+  const [sortOrder, setSortOrder] = useState<'default' | 'asc' | 'desc'>('default');
 
   // PDF Preview State
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string | null>(null);
@@ -476,6 +480,16 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
     return true;
   });
 
+  // --- SORT LOGIC ---
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortOrder === 'asc') {
+      return a.name.localeCompare(b.name);
+    } else if (sortOrder === 'desc') {
+      return b.name.localeCompare(a.name);
+    }
+    return 0;
+  });
+
   const handleClearFilters = () => {
     setSearchTerm('');
     setStatusFilter('all');
@@ -484,6 +498,9 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
     setVendor('');
     setSection('');
     setTransfer('');
+    setSection('');
+    setTransfer('');
+    setSortOrder('default');
     addToast("Filtros", "Filtros limpos.", "info");
   };
 
@@ -751,6 +768,8 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
               onGenerateSales={() => generatePDF('Relatório de Vendas', 'green')}
               onClearFilters={handleClearFilters}
               onClearSales={handleClearSales}
+              sortOrder={sortOrder}
+              onSortChange={setSortOrder}
             />
           </div>
 
@@ -782,7 +801,7 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
             </div>
           ) : (
             <ProductTable
-              products={filteredProducts}
+              products={sortedProducts}
               onDelete={handleDeleteRequest}
               onBulkDelete={handleBulkDelete}
               onEdit={handleEditProduct}
