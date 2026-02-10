@@ -772,7 +772,7 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
               onTransferChange={setTransfer}
               onNewProduct={handleOpenNewModal}
               onGenerateCatalog={() => generatePDF('Catálogo de Produtos', 'blue', products.filter(p => p.batch === 'CATÁLOGO'))}
-              onGenerateInventory={() => generatePDF('Relatório de Inventário', 'slate', filteredProducts)}
+              onGenerateInventory={() => generatePDF('Relatório de Inventário', 'slate', sortedProducts)}
               onGenerateSales={() => generatePDF('Relatório de Vendas', 'green')}
               onClearFilters={handleClearFilters}
               onClearSales={handleClearSales}
