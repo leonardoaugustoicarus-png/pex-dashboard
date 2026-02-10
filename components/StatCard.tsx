@@ -14,7 +14,7 @@ interface StatCardProps {
 const StatCard: React.FC<StatCardProps> = ({ title, count, label, icon: Icon, variant, onClick, isActive }) => {
   const variants = {
     orange: {
-      gradient: 'from-[#3d0e0e]/80 to-[#2c0a0a]/80 hover:to-[#3d0e0e]/90',
+      gradient: 'from-[#550c0c]/80 to-[#450a0a]/80 hover:to-[#550c0c]/90',
       border: 'border-orange-500/30',
       activeBorder: 'border-orange-500',
       text: 'text-orange-500',
@@ -23,7 +23,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, count, label, icon: Icon, va
       watermark: 'text-orange-500/5'
     },
     red: {
-      gradient: 'from-[#3d0e0e]/80 to-[#2c0a0a]/80 hover:to-[#3d0e0e]/90',
+      gradient: 'from-[#550c0c]/80 to-[#450a0a]/80 hover:to-[#550c0c]/90',
       border: 'border-red-500/30',
       activeBorder: 'border-red-500',
       text: 'text-red-500',
@@ -32,7 +32,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, count, label, icon: Icon, va
       watermark: 'text-red-500/5'
     },
     yellow: {
-      gradient: 'from-[#3d0e0e]/80 to-[#2c0a0a]/80 hover:to-[#3d0e0e]/90',
+      gradient: 'from-[#550c0c]/80 to-[#450a0a]/80 hover:to-[#550c0c]/90',
       border: 'border-yellow-500/30',
       activeBorder: 'border-yellow-400',
       text: 'text-yellow-400',
@@ -41,7 +41,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, count, label, icon: Icon, va
       watermark: 'text-yellow-500/5'
     },
     green: {
-      gradient: 'from-[#3d0e0e]/80 to-[#2c0a0a]/80 hover:to-[#3d0e0e]/90',
+      gradient: 'from-[#550c0c]/80 to-[#450a0a]/80 hover:to-[#550c0c]/90',
       border: 'border-green-500/30',
       activeBorder: 'border-green-500',
       text: 'text-green-500',
@@ -53,13 +53,13 @@ const StatCard: React.FC<StatCardProps> = ({ title, count, label, icon: Icon, va
 
   const style = variants[variant];
   const hasItems = count > 0;
-  
+
   // Condições Visuais
   const isExpired = variant === 'red' && hasItems;      // Vencidos -> Piscar
   const isCritical = variant === 'yellow' && hasItems;  // Críticos -> Aceso (Brilho constante)
 
   return (
-    <div 
+    <div
       onClick={onClick}
       className={`
         relative p-4 rounded-xl transition-all duration-500 cursor-pointer overflow-hidden group
@@ -67,21 +67,21 @@ const StatCard: React.FC<StatCardProps> = ({ title, count, label, icon: Icon, va
         ${style.gradient}
         
         ${/* Lógica de Borda e Escala Ativa/Hover */ ''}
-        ${isActive 
-            ? `${style.activeBorder} ring-1 ring-${variant}-500/50 shadow-2xl scale-[1.02] z-10` 
-            : `${style.border} hover:border-${variant}-500/50 hover:scale-[1.01]`
+        ${isActive
+          ? `${style.activeBorder} ring-1 ring-${variant}-500/50 shadow-2xl scale-[1.02] z-10`
+          : `${style.border} hover:border-${variant}-500/50 hover:scale-[1.01]`
         }
 
         ${/* EFEITO PISCAR PARA VENCIDOS */ ''}
-        ${isExpired 
-            ? 'animate-[pulse_1.5s_ease-in-out_infinite] border-red-500/80 shadow-[0_0_35px_rgba(239,68,68,0.5)] ring-1 ring-red-500/30' 
-            : ''
+        ${isExpired
+          ? 'animate-[pulse_1.5s_ease-in-out_infinite] border-red-500/80 shadow-[0_0_35px_rgba(239,68,68,0.5)] ring-1 ring-red-500/30'
+          : ''
         }
 
         ${/* EFEITO ACESO PARA CRÍTICOS */ ''}
         ${isCritical && !isActive
-            ? 'border-yellow-500/80 bg-yellow-500/10 shadow-[0_0_25px_rgba(234,179,8,0.4)] ring-1 ring-yellow-500/20' 
-            : ''
+          ? 'border-yellow-500/80 bg-yellow-500/10 shadow-[0_0_25px_rgba(234,179,8,0.4)] ring-1 ring-yellow-500/20'
+          : ''
         }
 
         ${/* Brilho Padrão se não for caso especial */ ''}
@@ -93,7 +93,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, count, label, icon: Icon, va
         <span className={`text-[10px] font-bold tracking-[0.2em] uppercase transition-colors ${isActive || isCritical || isExpired ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'}`}>
           {title}
         </span>
-        
+
         <div className={`p-1.5 rounded-lg border border-white/5 transition-all duration-300 ${isActive || isCritical || isExpired ? 'bg-white/10 text-white shadow-inner' : style.iconBg}`}>
           <Icon size={18} className={isActive || isCritical || isExpired ? 'drop-shadow-md' : ''} />
         </div>
@@ -110,10 +110,10 @@ const StatCard: React.FC<StatCardProps> = ({ title, count, label, icon: Icon, va
       </div>
 
       {/* Decorative Watermark */}
-      <Icon 
-        className={`absolute -bottom-6 -right-6 w-32 h-32 ${style.watermark} transform rotate-12 transition-transform duration-700 group-hover:scale-110 group-hover:rotate-6 z-0 pointer-events-none`} 
+      <Icon
+        className={`absolute -bottom-6 -right-6 w-32 h-32 ${style.watermark} transform rotate-12 transition-transform duration-700 group-hover:scale-110 group-hover:rotate-6 z-0 pointer-events-none`}
       />
-      
+
       {/* Glossy Overlay for Active/Alert States */}
       {(isActive || isCritical || isExpired) && (
         <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 pointer-events-none rounded-2xl" />

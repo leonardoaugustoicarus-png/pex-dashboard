@@ -611,6 +611,14 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
       alternateRowStyles: { fillColor: [240, 242, 245] }
     });
 
+    if (title === 'Relatório de Inventário' || title === 'Relatório de Vendas') {
+      doc.autoPrint();
+      const pdfBlobUrl = doc.output('bloburl');
+      window.open(pdfBlobUrl, '_blank');
+      addToast("Sucesso", "Relatório aberto em nova guia.", "success");
+      return;
+    }
+
     const pdfBlobUrl = doc.output('bloburl');
     setPdfPreviewUrl(pdfBlobUrl.toString());
     setCurrentPDFTitle(title);
@@ -618,7 +626,7 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
   };
 
   return (
-    <div className="min-h-screen bg-[#180404] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#3a0a0a] via-[#1f0505] to-[#0f0202] text-white font-sans flex flex-col relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#200000] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#7f1d1d] via-[#450a0a] to-[#200000] text-white font-sans flex flex-col relative overflow-x-hidden">
       <Header expiredCount={stats.expired} />
 
       {/* Toast Container */}
@@ -690,14 +698,14 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
           <div className="flex gap-2">
             <button
               onClick={handleExportBackup}
-              className="p-2.5 bg-[#2c0a0a] rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-orange-500/50 hover:bg-[#3d0e0e] transition-all shadow-lg hover:shadow-orange-500/10 active:scale-95"
+              className="p-2.5 bg-[#450a0a] rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-orange-500/50 hover:bg-[#7f1d1d] transition-all shadow-lg hover:shadow-orange-500/10 active:scale-95"
               title="Exportar Backup da Nuvem"
             >
               <Download size={18} />
             </button>
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="p-2.5 bg-[#2c0a0a] rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-orange-500/50 hover:bg-[#3d0e0e] transition-all shadow-lg hover:shadow-orange-500/10 active:scale-95"
+              className="p-2.5 bg-[#450a0a] rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-orange-500/50 hover:bg-[#7f1d1d] transition-all shadow-lg hover:shadow-orange-500/10 active:scale-95"
               title="Importar Arquivo para Nuvem"
             >
               <Upload size={18} />

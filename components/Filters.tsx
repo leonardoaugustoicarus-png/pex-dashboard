@@ -98,9 +98,9 @@ const Filters: React.FC<FiltersProps> = ({
     return () => clearTimeout(timer);
   }, [isExpanded]);
 
-  const inputBaseClass = "w-full bg-[#0a0202] border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/10 transition-all font-medium h-[46px]";
-  const labelBaseClass = "text-[10px] font-bold text-orange-400/80 uppercase tracking-widest mb-3 flex items-center gap-2";
-  const groupBaseClass = "bg-[#2c0a0a]/30 border border-white/5 rounded-2xl p-5 flex flex-col justify-center relative backdrop-blur-sm hover:bg-[#2c0a0a]/50 transition-colors duration-300";
+  const inputBaseClass = "w-full bg-[#200505] border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-red-500/50 focus:ring-2 focus:ring-red-500/10 transition-all font-medium h-[46px]";
+  const labelBaseClass = "text-[10px] font-bold text-red-400/80 uppercase tracking-widest mb-3 flex items-center gap-2";
+  const groupBaseClass = "bg-[#450a0a]/30 border border-white/5 rounded-2xl p-5 flex flex-col justify-center relative backdrop-blur-sm hover:bg-[#450a0a]/50 transition-colors duration-300";
 
   // Common button class for 3D effect
   const button3DClass = "relative flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all active:translate-y-1 active:shadow-none shadow-md border-b-4 hover:-translate-y-0.5 whitespace-nowrap";
@@ -125,29 +125,29 @@ const Filters: React.FC<FiltersProps> = ({
   return (
     <div className="flex flex-col gap-5 mb-8">
       {/* Top Row: Search, Toggle, Actions */}
-      <div className="bg-[#2c0a0a]/60 backdrop-blur-md p-4 rounded-2xl border border-white/10 flex flex-col lg:flex-row items-center justify-between gap-5 shadow-2xl relative z-30">
+      <div className="bg-[#450a0a]/60 backdrop-blur-md p-4 rounded-2xl border border-white/10 flex flex-col lg:flex-row items-center justify-between gap-5 shadow-2xl relative z-30">
 
         <div className="flex w-full lg:w-auto gap-3 items-center flex-1">
           {/* Search Bar */}
           <div className="relative flex-1 min-w-[200px] group">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 group-focus-within:text-orange-500 transition-colors" size={18} />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 group-focus-within:text-red-500 transition-colors" size={18} />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Pesquisar por nome, lote ou código de barras..."
-              className="w-full bg-[#150505] border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/10 text-gray-200 placeholder-gray-600 transition-all shadow-inner font-medium h-[42px]"
+              className="w-full bg-[#2a0505] border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:border-red-500/50 focus:ring-2 focus:ring-red-500/10 text-gray-200 placeholder-gray-600 transition-all shadow-inner font-medium h-[42px]"
             />
           </div>
 
-          {/* Sort Button */}
+          {/* Sort Button Style Update - Helper function or inline check */}
           <button
             onClick={handleSortToggle}
             className={`
                 hidden sm:flex items-center gap-2 px-4 h-[42px] rounded-xl text-xs font-bold tracking-wider uppercase transition-all duration-300 border border-white/5
                 ${sortOrder !== 'default'
                 ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.3)]'
-                : 'bg-[#2c0a0a] hover:bg-[#3d0e0e] text-gray-400 hover:text-white'}
+                : 'bg-[#450a0a] hover:bg-[#7f1d1d] text-gray-400 hover:text-white'}
               `}
             title="Ordenar por Nome"
           >
@@ -161,8 +161,8 @@ const Filters: React.FC<FiltersProps> = ({
             className={`
                 hidden sm:flex items-center gap-2 px-6 h-[42px] rounded-xl text-xs font-bold tracking-wider uppercase transition-all duration-300 border border-white/5
                 ${isExpanded
-                ? 'bg-orange-500 text-white shadow-[0_0_15px_rgba(249,115,22,0.3)]'
-                : 'bg-[#2c0a0a] hover:bg-[#3d0e0e] text-gray-400 hover:text-white'}
+                ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.3)]'
+                : 'bg-[#450a0a] hover:bg-[#7f1d1d] text-gray-400 hover:text-white'}
             `}
           >
             <Filter size={16} />
@@ -202,7 +202,7 @@ const Filters: React.FC<FiltersProps> = ({
 
           <button
             onClick={onGenerateInventory}
-            className={`${button3DClass} min-w-[120px] bg-[#2c0a0a] hover:bg-[#3d0e0e] text-gray-200 border-white/10 hover:border-white/20`}
+            className={`${button3DClass} min-w-[120px] bg-[#450a0a] hover:bg-[#7f1d1d] text-gray-200 border-white/10 hover:border-white/20`}
             title="Gerar PDF da Lista Atual"
           >
             <List size={16} /> INVENTÁRIO
@@ -287,7 +287,7 @@ const Filters: React.FC<FiltersProps> = ({
                 </button>
 
                 {isStatusDropdownOpen && (
-                  <div className="absolute top-full left-0 w-full mt-2 bg-[#1a0505] border border-white/10 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-50 overflow-hidden text-sm animate-in fade-in zoom-in-95 duration-100 ring-1 ring-white/5">
+                  <div className="absolute top-full left-0 w-full mt-2 bg-[#2a0505] border border-white/10 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-50 overflow-hidden text-sm animate-in fade-in zoom-in-95 duration-100 ring-1 ring-white/5">
                     {statusOptions.map((option) => (
                       <button
                         key={option.value}
@@ -381,7 +381,7 @@ const Filters: React.FC<FiltersProps> = ({
           <div className="absolute top-6 right-6">
             <button
               onClick={onClearFilters}
-              className="p-3 bg-[#150505] hover:bg-red-500/10 text-gray-400 hover:text-red-400 rounded-xl transition-all border border-white/5 hover:border-red-500/30 group shadow-lg"
+              className="p-3 bg-[#2a0505] hover:bg-red-500/10 text-gray-400 hover:text-red-400 rounded-xl transition-all border border-white/5 hover:border-red-500/30 group shadow-lg"
               title="Limpar Todos os Filtros"
             >
               <Eraser size={18} className="group-hover:rotate-12 transition-transform" />
