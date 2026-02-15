@@ -177,17 +177,22 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
   }, []);
 
   const calculateProductStatus = (expiryDateStr: string) => {
+    if (!expiryDateStr) return { diffDays: 0, status: 'safe' as const };
+
+    // Set "today" to midnight in local time
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    if (!expiryDateStr) return { diffDays: 0, status: 'safe' as const };
-
+    // Parse the expiry date (YYYY-MM-DD) as local date at midnight
     const [year, month, day] = expiryDateStr.split('-').map(Number);
     const expiryLocal = new Date(year, month - 1, day);
     expiryLocal.setHours(0, 0, 0, 0);
 
+    // Difference in milliseconds
     const diffTime = expiryLocal.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    // Difference in days, using round to handle potential DST offsets
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
     let status: 'expired' | 'critical' | 'safe' = 'safe';
     if (diffDays < 0) status = 'expired';
@@ -195,6 +200,21 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
 
     return { diffDays, status };
   };
+
+  // Dynamic products processing to ensure daysRemaining and status are always fresh
+  const processedProducts = useMemo(() => {
+    return products.map(product => {
+      if (product.batch === 'CATÁLOGO') {
+        return { ...product, daysRemaining: 999, status: 'safe' as const };
+      }
+      const { diffDays, status } = calculateProductStatus(product.expiryDate);
+      return {
+        ...product,
+        daysRemaining: diffDays,
+        status: status
+      };
+    });
+  }, [products]);
 
   // --- ACTIONS HANDLERS (UPDATED FOR FIREBASE) ---
 
@@ -251,7 +271,7 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
         // Check Catalog Logic
         let shouldAddToCatalog = false;
         if (safeEan) {
-          const catalogExists = products.some(p =>
+          const catalogExists = processedProducts.some(p =>
             p.batch === 'CATÁLOGO' && p.ean === safeEan
           );
           if (!catalogExists) {
@@ -280,7 +300,7 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
 
   // --- DELETE HANDLERS ---
   const handleDeleteRequest = (id: string) => {
-    const product = products.find(p => p.id === id);
+    const product = processedProducts.find(p => p.id === id);
     if (product) {
       setProductToDelete(product);
       setBulkIdsToDelete([]);
@@ -439,7 +459,7 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
   };
 
   // Statistics Calculation
-  const inventoryProducts = products.filter(p => p.batch !== 'CATÁLOGO');
+  const inventoryProducts = processedProducts.filter(p => p.batch !== 'CATÁLOGO');
 
   const stats = {
     total: inventoryProducts.length,
@@ -449,12 +469,12 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
   };
 
   // --- FILTER LOGIC ---
-  let baseProductList = products;
+  let baseProductList = processedProducts;
 
   if (statusFilter === 'catalog') {
-    baseProductList = products.filter(p => p.batch === 'CATÁLOGO');
+    baseProductList = processedProducts.filter(p => p.batch === 'CATÁLOGO');
   } else {
-    baseProductList = products.filter(p => p.batch !== 'CATÁLOGO');
+    baseProductList = processedProducts.filter(p => p.batch !== 'CATÁLOGO');
   }
 
   const filteredProducts = baseProductList.filter(p => {
@@ -659,7 +679,7 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveProduct}
         productToEdit={editingProduct}
-        catalogReference={products}
+        catalogReference={processedProducts}
       />
       <ShareModal
         isOpen={isShareModalOpen}
@@ -771,7 +791,7 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
               transfer={transfer}
               onTransferChange={setTransfer}
               onNewProduct={handleOpenNewModal}
-              onGenerateCatalog={() => generatePDF('Catálogo de Produtos', 'blue', products.filter(p => p.batch === 'CATÁLOGO'))}
+              onGenerateCatalog={() => generatePDF('Catálogo de Produtos', 'blue', processedProducts.filter(p => p.batch === 'CATÁLOGO'))}
               onGenerateInventory={() => generatePDF('Relatório de Inventário', 'slate', sortedProducts)}
               onGenerateSales={() => generatePDF('Relatório de Vendas', 'green')}
               onClearFilters={handleClearFilters}
