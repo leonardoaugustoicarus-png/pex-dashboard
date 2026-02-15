@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import {
   Download, Upload, Box, AlertCircle,
   Clock, CheckCircle, Monitor, Database, LoaderCircle
@@ -190,7 +190,7 @@ const Dashboard: React.FC<DashboardProps> = ({ products, salesHistory, isLoading
 
     // Difference in milliseconds
     const diffTime = expiryLocal.getTime() - today.getTime();
-    
+
     // Difference in days, using round to handle potential DST offsets
     const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
